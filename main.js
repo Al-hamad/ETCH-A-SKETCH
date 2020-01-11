@@ -1,42 +1,43 @@
 const display = document.querySelector('#display');
+createGrid();
 
 function createGrid(squares = 16){
     // delete previous grid
-    while (display.firstChild) {
-        display.removeChild(display.firstChild)
-        };
-    // calculate width and height of the squares
-    let width = display.offsetWidth/squares;
-    let height = display.offsetHeight/squares;
+    while (display.firstChild) display.removeChild(display.firstChild);
     // create new
-    for (let i = 0 ; i < squares**2 ; i++ ){
+    for (let i = 0 ; i < squares**2; i++ ){
         const div = document.createElement('div');
-        div.style.cssText= `width:${width}px;height:${height}px`
-        div.classList.add('grid')
-        display.appendChild(div)
+        div.style.flexBasis = `${760/squares}px`;
+        div.classList.add('grid');
+        display.appendChild(div);
     };
 };
 
-const createGridButton = document.getElementById('create-grid');
-// this button calls the createGrid function and prompt for squares
-    createGridButton.addEventListener("click", () => {
-        createGrid(prompt('How many squares per side?',10))
-    });
+let color = 'black';
+const toggleColorButton = document.querySelector('#toggle-color');
+    toggleColorButton.addEventListener("click", () => {
+        color === 'black' ? color = 'colored' : color = 'black';
+    });   
 
-
-// paints on the grid by adding a class  
+// paints on the grid
 display.addEventListener("mouseover", e => {
     if (e.target.classList.contains('grid')){
-            e.target.classList.add("black");
+        if (color === 'black'){
+            e.target.style.background = 'black';
+        } else {
+        e.target.style.background = "#"+Math.floor(Math.random()*16777215).toString(16);
+        };      
     };
-})
+});
 
- // selecting clear button and then listen to click and clears grid
  const clearButton = document.querySelector('#clear');
-
     clearButton.addEventListener("click", () => {
-            Array.from(display.children).forEach(el => {
-            el.classList.remove('black');
+        [...display.children].forEach(el => {
+            el.style.background = '#fff';
         }); 
     });
  
+const createGridButton = document.querySelector('#create-grid');
+    createGridButton.addEventListener("click", () => {
+        createGrid(prompt('How many squares per side?',16));
+    });
